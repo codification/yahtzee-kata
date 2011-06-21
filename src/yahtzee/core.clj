@@ -10,14 +10,16 @@
   (filter #{die} dice))
 
 (fact
- (occ 6 [1 2 3 4 5]) => [])
+ (occ 6 [1 2 3 4 5]) => []
+ (occ 1 [1 2 3 4 5]) => [1]
+ (occ 1 [1 2 1 2 1]) => [1 1 1])
 
 (defn sum [dice]
-  (reduce + dice))
+  (reduce + (flatten dice)))
 
 (fact
- (sum []) => 0)
-
+ (sum [1 1 1]) => 3
+ (sum [[1 1] [2 2]]) => 6)
 
 (defn sixes [throw]
   (sum (occ 6 throw)))
@@ -41,10 +43,8 @@
 
 (defn pair [throw]
   (let [candidates (pairs throw)
-        scores (map sum candidates)]
-    (if (empty? scores)
-      0
-      (first (sort > scores)))))
+        scores (sort candidates)]
+    (sum (last scores))))
 
 (fact
  (pair ...throw...) => 0
@@ -59,7 +59,7 @@
 
 
 (defn two-pairs [throw]
-  (sum (flatten (pairs throw)))) ;; Duplication
+  (sum (pairs throw))) ;; Duplication
 
 
 (fact
@@ -83,7 +83,7 @@
  (triplets [1 2 3 2 2]) => [[2 2 2]])
 
 (defn three-of-a-kind [throw]
-  (sum (flatten (triplets throw)))) ;; Duplication...
+  (sum (triplets throw))) ;; Duplication...
 
 (fact
  (three-of-a-kind ...throw...) => 12
