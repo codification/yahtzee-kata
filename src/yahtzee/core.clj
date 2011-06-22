@@ -70,35 +70,35 @@
 
 
 (defn two-pairs [throw]
-  (sum (pairs throw))) ;; Duplication
+  (sum (map #(* 2 %) (pairs throw)))) ;; Duplication
 
 (fact
  (two-pairs ...throw...) => 12
  (provided
-  (pairs ...throw...) => [[6 6]])
+  (pairs ...throw...) => [6])
  (two-pairs ...throw...) => 6
  (provided
-  (pairs ...throw...) => [[2 2] [1 1]])
+  (pairs ...throw...) => [2 1])
  (two-pairs ...throw...) => 0
  (provided
   (pairs ...throw...) => []))
 
 
 (defn triplets [throw]
-  (filter #(= 3 (count %))
-          (map #(occ % throw) sides))) ;; Duplication...
+  (let [freq (frequencies throw)]
+    (map first (filter #(= 3 (second %)) freq))))
 
 (fact
  (triplets [1 2 3 4 5]) => []
- (triplets [1 2 3 2 2]) => [[2 2 2]])
+ (triplets [1 2 3 2 2]) => [2])
 
 (defn three-of-a-kind [throw]
-  (sum (triplets throw))) ;; Duplication...
+  (sum (map #(* 3 %) (triplets throw)))) ;; Duplication...
 
 (fact
  (three-of-a-kind ...throw...) => 12
  (provided
-  (triplets ...throw...) => [[4 4 4]])
+  (triplets ...throw...) => [4])
  (three-of-a-kind ...throw...) => 0
  (provided
   (triplets ...throw...) => []))
