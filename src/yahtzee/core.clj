@@ -5,14 +5,6 @@
 
 (unfinished )
 
-(defn occ [die dice]
-  (filter #{die} dice))
-
-(fact
- (occ 6 [1 2 3 4 5]) => []
- (occ 1 [1 2 3 4 5]) => [1]
- (occ 1 [1 2 1 2 1]) => [1 1 1])
-
 (defn sum [dice]
   (reduce + (flatten dice)))
 
@@ -20,15 +12,12 @@
  (sum [1 1 1]) => 3
  (sum [[1 1] [2 2]]) => 6)
 
-(defn sixes [throw]
-  (sum (occ 6 throw)))
-(defn fives [throw]
-  (sum (occ 5 throw)))
-
 (defn make-occ-func [die]
   (fn [throw]
     (* ((frequencies throw) die 0) die)))
 
+(def sixes (make-occ-func 4))
+(def fives (make-occ-func 4))
 (def fours (make-occ-func 4))
 (def threes (make-occ-func 3))
 (def twos (make-occ-func 2))
@@ -40,9 +29,12 @@
  (fours [1 2 3 4 5])  => 4
  (threes [1 2 3 4 3]) => 6)
 
-(defn pairs [throw]
+(defn recurring [times throw]
   (let [freq (frequencies throw)]
-    (map first (filter (fn [[_ frequency]] (= 2 frequency) ) freq))))
+    (map first (filter #(= times (second %)) freq))))
+
+(defn pairs [throw]
+  (recurring 2 throw))
 
 (fact
  (pairs [1 2 3 4 5]) => []
@@ -85,8 +77,7 @@
 
 
 (defn triplets [throw]
-  (let [freq (frequencies throw)]
-    (map first (filter #(= 3 (second %)) freq))))
+  (recurring 3 throw))
 
 (fact
  (triplets [1 2 3 4 5]) => []
@@ -102,3 +93,10 @@
  (three-of-a-kind ...throw...) => 0
  (provided
   (triplets ...throw...) => []))
+
+(defn four-of-a-kind [throw]
+  (sum (map #(* 4 %) (recurring 4 throw))))
+
+(fact
+ (four-of-a-kind [1 4 4 4 4]) => 16
+ (four-of-a-kind [4 2 3 4 4]) => 0)
