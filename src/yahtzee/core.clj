@@ -16,8 +16,8 @@
   (fn [throw]
     (* ((frequencies throw) die 0) die)))
 
-(def sixes (make-occ-func 4))
-(def fives (make-occ-func 4))
+(def sixes (make-occ-func 6))
+(def fives (make-occ-func 5))
 (def fours (make-occ-func 4))
 (def threes (make-occ-func 3))
 (def twos (make-occ-func 2))
@@ -95,7 +95,7 @@
   (triplets ...throw...) => []))
 
 (defn four-of-a-kind [throw]
-  (sum (map #(* 4 %) (recurring 4 throw))))
+  (sum (map #(* 4 %) (recurring 4 throw)))) ;; Duplication...
 
 (fact
  (four-of-a-kind [1 4 4 4 4]) => 16
