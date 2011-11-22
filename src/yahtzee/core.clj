@@ -6,7 +6,7 @@
 (unfinished )
 
 (defn sum [dice]
-  (reduce + (flatten dice)))
+  (reduce + 0 (flatten dice)))
 
 (fact
  (sum [1 1 1]) => 3
@@ -101,3 +101,29 @@
  (full-house [1 1 2 2 3]) => 0
  (full-house [1 2 2 2 3]) => 0)
 
+(defn small-straight [throw]
+  (if (= #{1 2 3 4 5} (set throw))
+    (sum throw)
+    0))
+
+(fact
+ (small-straight [1 2 3 4 5]) => 15
+ (small-straight [1 2 3 4 6]) => 0)
+
+(defn large-straight [throw]
+  (if (= #{2 3 4 5 6} (set throw))
+    (sum throw)
+    0))
+
+(fact
+ (large-straight [1 2 3 4 5]) => 0
+ (large-straight [1 2 3 4 6]) => 0
+ (large-straight [2 3 4 5 6]) => 20)
+
+(defn chance [throw]
+  (sum throw))
+
+(fact
+ (chance ...throw...) => ...result...
+ (provided
+  (sum ...throw...) => ...result...))
