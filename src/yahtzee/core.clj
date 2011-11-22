@@ -76,3 +76,12 @@
 (fact
  (four-of-a-kind [1 4 4 4 4]) => 16
  (four-of-a-kind [4 2 3 4 4]) => 0)
+
+(defn yahtzee [throw]
+  (if (seq (recurring 5 throw))
+    50
+    0))
+
+(fact
+ (yahtzee [1 1 1 1 1]) => 50
+ (yahtzee [1 1 2 1 1]) => 0)
