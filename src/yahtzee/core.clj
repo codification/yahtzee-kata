@@ -30,8 +30,9 @@
  (threes [1 2 3 4 3]) => 6)
 
 (defn recurring [times throw]
-  (let [freq (frequencies throw)]
-    (map first (filter #(= times (second %)) freq))))
+  (let [occurences (frequencies throw)]
+    (for [[die occurs] occurences :when (<= times occurs)]
+      die)))
 
 (defn pair [throw]
   (let [pairs (recurring 2 throw)]
@@ -40,15 +41,9 @@
       0)))
 
 (fact
- (pair ...throw...) => 0
- (provided
-  (recurring 2 ...throw...) => [])
- (pair ...throw...) => 2
- (provided
-  (recurring 2 ...throw...) => [1])
- (pair ...throw...) => 6
- (provided
-  (recurring 2 ...throw...) => [1 3]))
+ (pair [1 2 3 4 5]) => 0
+ (pair [1 1 2 3 4]) => 2
+ (pair [1 1 2 3 3]) => 6)
 
 (defn two-pairs [throw]
   (let [pairs (recurring 2 throw)
@@ -58,29 +53,19 @@
    (sum (map #(* 2 %) pair-of-pairs)))) ;; Duplication
 
 (fact
- (two-pairs ...throw...) => 22
- (provided
-  (recurring 2 ...throw...) => [6 5])
- (two-pairs ...throw...) => 6
- (provided
-  (recurring 2 ...throw...) => [2 1])
- (two-pairs ...throw...) => 0
- (provided
-  (recurring 2 ...throw...) => [2])
- (two-pairs ...throw...) => 0
- (provided
-  (recurring 2 ...throw...) => []))
+ (two-pairs [6 5 6 5 1]) => 22
+ (two-pairs [2 1 2 1 4]) => 6
+ (two-pairs [2 2 1 5 6]) => 0
+ (two-pairs [1 2 3 4 5]) => 0
+ (two-pairs [1 1 1 2 2]) => 6)
 
 (defn three-of-a-kind [throw]
   (sum (map #(* 3 %) (recurring 3 throw)))) ;; Duplication...
 
 (fact
- (three-of-a-kind ...throw...) => 12
- (provided
-  (recurring 3 ...throw...) => [4])
- (three-of-a-kind ...throw...) => 0
- (provided
-  (recurring 3 ...throw...) => []))
+ (three-of-a-kind [1 3 2 3 3]) => 9
+ (three-of-a-kind [1 3 3 3 3]) => 9
+ (three-of-a-kind [2 2 1 1 3]) => 0)
 
 (defn four-of-a-kind [throw]
   (sum (map #(* 4 %) (recurring 4 throw)))) ;; Duplication...
