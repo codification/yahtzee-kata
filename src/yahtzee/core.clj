@@ -34,6 +34,9 @@
     (for [[die occurs] occurences :when (<= times occurs)]
       die)))
 
+(defn total-for-recurs [times recurs]
+  (sum (map (partial * times) recurs)))
+
 (defn pair [throw]
   (let [pairs (recurring 2 throw)]
     (if (seq pairs)
@@ -50,7 +53,7 @@
         pair-of-pairs (if (= 2 (count pairs))
                         pairs
                         [])]
-   (sum (map #(* 2 %) pair-of-pairs)))) ;; Duplication
+    (total-for-recurs 2 pair-of-pairs)))
 
 (fact
  (two-pairs [6 5 6 5 1]) => 22
@@ -60,7 +63,7 @@
  (two-pairs [1 1 1 2 2]) => 6)
 
 (defn three-of-a-kind [throw]
-  (sum (map #(* 3 %) (recurring 3 throw)))) ;; Duplication...
+  (total-for-recurs 3 (recurring 3 throw))) ;; Duplication...
 
 (fact
  (three-of-a-kind [1 3 2 3 3]) => 9
@@ -68,7 +71,7 @@
  (three-of-a-kind [2 2 1 1 3]) => 0)
 
 (defn four-of-a-kind [throw]
-  (sum (map #(* 4 %) (recurring 4 throw)))) ;; Duplication...
+  (total-for-recurs 4 (recurring 4 throw))) ;; Duplication...
 
 (fact
  (four-of-a-kind [1 4 4 4 4]) => 16
