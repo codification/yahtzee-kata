@@ -85,3 +85,19 @@
 (fact
  (yahtzee [1 1 1 1 1]) => 50
  (yahtzee [1 1 2 1 1]) => 0)
+
+(defn full-house [throw]
+  (let [triplet (recurring 3 throw)
+        ex-triplet (filter (complement (set triplet)) throw)
+        pair (recurring 2 ex-triplet)]
+    (if (and (seq pair) (seq triplet))
+      (sum [ (total-for-recurs 2 pair)
+             (total-for-recurs 3 triplet)])
+      0)))
+
+(fact
+ (full-house [2 2 3 3 3]) => 13
+ (full-house [2 2 2 2 2]) => 0
+ (full-house [1 1 2 2 3]) => 0
+ (full-house [1 2 2 2 3]) => 0)
+
