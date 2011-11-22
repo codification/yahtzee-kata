@@ -36,13 +36,13 @@
 (defn pair [throw]
   (let [pairs (recurring 2 throw)]
     (if (seq pairs)
-      (* 2 (last pairs))
+      (* 2 (last (sort pairs)))
       0)))
 
 (fact
  (pair [1 2 3 4 5]) => 0
  (pair [1 1 2 3 4]) => 2
- (pair [1 1 2 3 3]) => 6)
+ (pair [3 3 2 1 1]) => 6)
 
 (defn two-pairs [throw]
   (let [pairs (recurring 2 throw)
