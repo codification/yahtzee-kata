@@ -1,10 +1,6 @@
 (ns yahtzee.core
   (:use midje.sweet))
 
-(def sides [6 5 4 3 2 1])
-
-(unfinished )
-
 (defn sum [dice]
   (reduce + 0 (flatten dice)))
 
