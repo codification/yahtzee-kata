@@ -33,66 +33,54 @@
   (let [freq (frequencies throw)]
     (map first (filter #(= times (second %)) freq))))
 
-(defn pairs [throw]
-  (recurring 2 throw))
-
-(fact
- (pairs [1 2 3 4 5]) => []
- (pairs [1 2 3 2 5]) => [2]
- (pairs [1 2 3 2 1]) => (just [2 1] :in-any-order)
- (pairs [3 3 2 6 6]) => (just [6 3] :in-any-order))
-
-
 (defn pair [throw]
-  (let [candidates (pairs throw)]
-    (if (empty? candidates)
-      0
-      (* 2 (last (sort candidates))))))
+  (let [pairs (recurring 2 throw)]
+    (if (seq pairs)
+      (* 2 (last pairs))
+      0)))
 
 (fact
  (pair ...throw...) => 0
  (provided
-  (pairs ...throw...) => [])
+  (recurring 2 ...throw...) => [])
  (pair ...throw...) => 2
  (provided
-  (pairs ...throw...) => [1])
+  (recurring 2 ...throw...) => [1])
  (pair ...throw...) => 6
  (provided
-  (pairs ...throw...) => [1 3]))
-
+  (recurring 2 ...throw...) => [1 3]))
 
 (defn two-pairs [throw]
-  (sum (map #(* 2 %) (pairs throw)))) ;; Duplication
+  (let [pairs (recurring 2 throw)
+        pair-of-pairs (if (= 2 (count pairs))
+                        pairs
+                        [])]
+   (sum (map #(* 2 %) pair-of-pairs)))) ;; Duplication
 
 (fact
- (two-pairs ...throw...) => 12
+ (two-pairs ...throw...) => 22
  (provided
-  (pairs ...throw...) => [6])
+  (recurring 2 ...throw...) => [6 5])
  (two-pairs ...throw...) => 6
  (provided
-  (pairs ...throw...) => [2 1])
+  (recurring 2 ...throw...) => [2 1])
  (two-pairs ...throw...) => 0
  (provided
-  (pairs ...throw...) => []))
-
-
-(defn triplets [throw]
-  (recurring 3 throw))
-
-(fact
- (triplets [1 2 3 4 5]) => []
- (triplets [1 2 3 2 2]) => [2])
+  (recurring 2 ...throw...) => [2])
+ (two-pairs ...throw...) => 0
+ (provided
+  (recurring 2 ...throw...) => []))
 
 (defn three-of-a-kind [throw]
-  (sum (map #(* 3 %) (triplets throw)))) ;; Duplication...
+  (sum (map #(* 3 %) (recurring 3 throw)))) ;; Duplication...
 
 (fact
  (three-of-a-kind ...throw...) => 12
  (provided
-  (triplets ...throw...) => [4])
+  (recurring 3 ...throw...) => [4])
  (three-of-a-kind ...throw...) => 0
  (provided
-  (triplets ...throw...) => []))
+  (recurring 3 ...throw...) => []))
 
 (defn four-of-a-kind [throw]
   (sum (map #(* 4 %) (recurring 4 throw)))) ;; Duplication...
